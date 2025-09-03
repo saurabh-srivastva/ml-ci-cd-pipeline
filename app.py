@@ -1,4 +1,3 @@
-#app.py
 import os
 import json
 from flask import Flask, request, jsonify
@@ -9,9 +8,9 @@ import numpy as np
 MODEL_PATH = os.getenv('MODEL_PATH', 'model/iris_model.pkl')
 
 #--App
-app = Flask(_name_)
+app = Flask(__name__)
 
-#load one at startuo
+#load one at startup
 try:
     model = joblib.load(MODEL_PATH)
 except Exception as e:
@@ -26,7 +25,7 @@ def health():
 def predict():
     '''
     accepts either:
-    {"input " : [[...feature vectors...],[...]]} #2D list
+    {"input" : [[...feature vectors...],[...]]} #2D list
     or
     {"input" : [...feature vector...]} #1D list
     '''
@@ -45,6 +44,7 @@ def predict():
         preds = preds.tolist()
         return jsonify(predictions=preds), 200
     except Exception as e:
-        return jsonify(error=str(e)), 500   
-if _name_ == '_main_':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 800)))
+        return jsonify(error=str(e)), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 800)))
