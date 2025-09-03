@@ -1,21 +1,34 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
 import joblib
+import os
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
 
-# Load the dataset
-data = pd.read_csv('data/iris.csv')
+def train_and_save_model():
+    """
+    Trains a simple model on the Iris dataset and saves it to disk.
+    """
+    # Load the Iris dataset
+    iris = load_iris()
+    X, y = iris.data, iris.target
 
-# Preprocess the dataset
-X = data.drop('species', axis=1)
-y = data['species']
+    # Train a simple Logistic Regression model
+    model = LogisticRegression(max_iter=200)
+    model.fit(X, y)
+    print("Model trained successfully.")
 
-# Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # --- Saving the model ---
+    # Define the directory and model path
+    model_dir = 'model'
+    model_path = os.path.join(model_dir, 'iris_model.pkl')
 
-# Train a RandomForest model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+    # Create the directory if it doesn't exist
+    if not os.path.exists(model_dir):
+        os.makedirs(model_dir)
+        print(f"Directory '{model_dir}' created.")
 
-# Save the model
-joblib.dump(model, 'model/iris_model.pkl')
+    # Save the trained model to the specified path
+    joblib.dump(model, model_path)
+    print(f"Model saved to {model_path}")
+
+if __name__ == '__main__':
+    train_and_save_model()
