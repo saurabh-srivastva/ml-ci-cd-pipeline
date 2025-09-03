@@ -1,7 +1,9 @@
+# train.py
+
 import joblib
 import os
 from sklearn.datasets import load_iris
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier  # Changed this import
 
 def train_and_save_model():
     """
@@ -11,8 +13,8 @@ def train_and_save_model():
     iris = load_iris()
     X, y = iris.data, iris.target
 
-    # Train a simple Logistic Regression model
-    model = LogisticRegression(max_iter=200)
+    # Train a RandomForestClassifier model
+    model = RandomForestClassifier(n_estimators=100, random_state=42) # Changed the model
     model.fit(X, y)
     print("Model trained successfully.")
 
