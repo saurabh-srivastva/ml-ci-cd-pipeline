@@ -1,3 +1,4 @@
+#app.py
 import os
 import json
 from flask import Flask, request, jsonify
@@ -5,6 +6,8 @@ import joblib
 import numpy as np
 
 #--config--
+# Note: Ensure 'model/iris_model.pkl' is available in your deployment environment.
+# The 'FileNotFoundError' means this path is incorrect or the file wasn't uploaded.
 MODEL_PATH = os.getenv('MODEL_PATH', 'model/iris_model.pkl')
 
 #--App
@@ -25,9 +28,9 @@ def health():
 def predict():
     '''
     accepts either:
-    {"input" : [[...feature vectors...],[...]]} #2D list
+    {"input": [[...feature vectors...],[...]]} #2D list
     or
-    {"input" : [...feature vector...]} #1D list
+    {"input": [...feature vector...]} #1D list
     '''
     try:
         payload = request.get_json(force=True)
@@ -45,6 +48,7 @@ def predict():
         return jsonify(predictions=preds), 200
     except Exception as e:
         return jsonify(error=str(e)), 500
-
+        
 if __name__ == '__main__':
+    # The port number '800' was corrected to be an integer.
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 800)))
